@@ -61,3 +61,16 @@ def student_detail(request, id):
     elif request.method == "DELETE":
         student.delete()
         return Response({"message" : "Successful"}, status.HTTP_204_NO_CONTENT)
+    
+@api_view(['GET', 'POST'])
+def path_view(request):
+    if request.method == "POST":
+        serializer = PathSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    
+    paths = Path.objects.all()
+    serializer = PathSerializer(paths, many=True)
+    return Response(serializer.data)
